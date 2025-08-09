@@ -3,33 +3,33 @@ info:
   title: Hotel Management System API
   version: 1.0.0
   description: >
-    একটি সম্পূর্ণ RESTful API হোটেল ম্যানেজমেন্ট সিস্টেমের জন্য,
-    যেখানে রুম বুকিং, ইউজার ম্যানেজমেন্ট, পেমেন্ট, স্টাফ টাস্ক, রিপোর্ট ও নোটিফিকেশন অন্তর্ভুক্ত।
+    A complete RESTful API for a hotel management system,
+    including room booking, user management, payment, staff tasks, reports, and notifications.
 servers:
   - url: http://localhost:5000/api/v1
     description: Local development server
 
 tags:
   - name: Auth
-    description: ইউজার রেজিস্ট্রেশন, লগইন, লগআউট এবং পাসওয়ার্ড রিসেট সম্পর্কিত এন্ডপয়েন্টসমূহ
+    description: Endpoints for user registration, login, logout, and password reset.
   - name: Users
-    description: ইউজার ম্যানেজমেন্ট এন্ডপয়েন্টসমূহ
+    description: User management endpoints.
   - name: Rooms
-    description: রুম ম্যানেজমেন্ট এন্ডপয়েন্টসমূহ
+    description: room management endpoints.
   - name: Bookings
-    description: বুকিং ম্যানেজমেন্ট এন্ডপয়েন্টসমূহ
+    description: Booking management endpoints.
   - name: Payments
-    description: পেমেন্ট ম্যানেজমেন্ট এন্ডপয়েন্টসমূহ
+    description: Payment management endpoints.
   - name: Staff
-    description: স্টাফ টাস্ক ম্যানেজমেন্ট এন্ডপয়েন্টসমূহ
+    description: Staff management endpoints.
   - name: Reports
-    description: রিপোর্ট জেনারেশন এন্ডপয়েন্টসমূহ
+    description: Reports management endpoints.
   - name: Notifications
-    description: নোটিফিকেশন ম্যানেজমেন্ট এন্ডপয়েন্টসমূহ
+    description: notifications management endpoints.
   - name: Settings
-    description: সিস্টেম সেটিংস ম্যানেজমেন্ট এন্ডপয়েন্টসমূহ
+    description: system settings management endpoints.
   - name: Logs
-    description: সিস্টেম লগ ম্যানেজমেন্ট এন্ডপয়েন্টসমূহ
+    description: system logs management endpoints.
 
 components:
   securitySchemes:
@@ -86,7 +86,7 @@ components:
         message:
           type: string
           example: "Operation successful"
-    
+
     # Users Schemas
     User:
       type: object
@@ -126,7 +126,7 @@ components:
         status:
           type: string
           enum: [active, banned]
-    
+
     # Rooms Schemas
     Room:
       type: object
@@ -178,7 +178,7 @@ components:
           items:
             type: string
             format: uri
-    
+
     # Bookings Schemas
     Booking:
       type: object
@@ -223,7 +223,7 @@ components:
         checkOutDate:
           type: string
           format: date
-    
+
     # Payments Schemas
     Payment:
       type: object
@@ -259,7 +259,7 @@ components:
         method:
           type: string
           enum: [cash, card, sslcommerz, stripe]
-    
+
     # Staff Schemas
     Task:
       type: object
@@ -294,7 +294,7 @@ components:
           enum: [pending, in-progress, done]
         note:
           type: string
-    
+
     # Notifications Schemas
     Notification:
       type: object
@@ -312,7 +312,7 @@ components:
         createdAt:
           type: string
           format: date-time
-    
+
     # Settings Schemas
     Settings:
       type: object
@@ -365,7 +365,7 @@ components:
               type: string
             preCheckinReminder:
               type: string
-    
+
     # Logs Schemas
     Log:
       type: object
@@ -393,7 +393,7 @@ paths:
     post:
       tags:
         - Auth
-      summary: নতুন কাস্টমার রেজিস্ট্রেশন
+      summary: New customer registration
       requestBody:
         required: true
         content:
@@ -402,13 +402,13 @@ paths:
               $ref: "#/components/schemas/RegisterRequest"
       responses:
         "201":
-          description: রেজিস্ট্রেশন সফল হয়েছে
+          description: Registration was successful
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/MessageResponse"
         "400":
-          description: ভুল ইনপুট বা ইউজার ইতিমধ্যেই আছে
+          description: Incorrect input or user already exists
           content:
             application/json:
               schema:
@@ -418,7 +418,7 @@ paths:
     post:
       tags:
         - Auth
-      summary: ইউজার লগইন (সব রোলের জন্য)
+      summary: User login (for all roles)
       requestBody:
         required: true
         content:
@@ -427,13 +427,13 @@ paths:
               $ref: "#/components/schemas/LoginRequest"
       responses:
         "200":
-          description: লগইন সফল, টোকেন প্রদান
+          description: Login successful, token issued
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AuthResponse"
         "401":
-          description: অবৈধ ইউজারনেম বা পাসওয়ার্ড
+          description: Invalid username or password
           content:
             application/json:
               schema:
@@ -443,12 +443,12 @@ paths:
     post:
       tags:
         - Auth
-      summary: ইউজার লগআউট
+      summary: User logout
       security:
         - BearerAuth: []
       responses:
         "200":
-          description: সফলভাবে লগআউট হয়েছে
+          description: Successfully logged out
           content:
             application/json:
               schema:
@@ -458,7 +458,7 @@ paths:
     post:
       tags:
         - Auth
-      summary: নতুন access token তৈরি করা
+      summary: create new access token
       requestBody:
         required: true
         content:
@@ -473,13 +473,13 @@ paths:
                   example: "d1f3e8f5-3ac1-4a53-bb4b-3f3a7c123abc"
       responses:
         "200":
-          description: নতুন access token প্রদান
+          description: New access token issued
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AuthResponse"
         "401":
-          description: অবৈধ বা মেয়াদোত্তীর্ণ রিফ্রেশ টোকেন
+          description: Invalid or expired refresh token
           content:
             application/json:
               schema:
@@ -489,7 +489,7 @@ paths:
     post:
       tags:
         - Auth
-      summary: পাসওয়ার্ড রিসেট করার জন্য OTP বা লিঙ্ক পাঠানো
+      summary: Sending OTP or link for password reset
       requestBody:
         required: true
         content:
@@ -505,13 +505,13 @@ paths:
                   example: "rahim@example.com"
       responses:
         "200":
-          description: রিসেট লিঙ্ক বা OTP পাঠানো হয়েছে
+          description: Reset link or OTP has been sent
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/MessageResponse"
         "404":
-          description: ইমেইল পাওয়া যায়নি
+          description: email not found
           content:
             application/json:
               schema:
@@ -521,7 +521,7 @@ paths:
     post:
       tags:
         - Auth
-      summary: পাসওয়ার্ড রিসেট করা
+      summary: password reset
       requestBody:
         required: true
         content:
@@ -541,13 +541,13 @@ paths:
                   example: "NewStrongPassword123"
       responses:
         "200":
-          description: পাসওয়ার্ড সফলভাবে রিসেট হয়েছে
+          description: Password has been reset successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/MessageResponse"
         "400":
-          description: অবৈধ বা মেয়াদোত্তীর্ণ টোকেন
+          description: Invalid or expired token
           content:
             application/json:
               schema:
@@ -558,12 +558,12 @@ paths:
     get:
       tags:
         - Users
-      summary: সকল ইউজারের তালিকা দেখুন (শুধুমাত্র অ্যাডমিন)
+      summary: View list of all users (admin only)
       security:
         - BearerAuth: []
       responses:
         "200":
-          description: ইউজার তালিকা সফলভাবে রিটার্ন হয়েছে
+          description: User list returned successfully
           content:
             application/json:
               schema:
@@ -573,7 +573,7 @@ paths:
     post:
       tags:
         - Users
-      summary: নতুন ইউজার তৈরি (শুধুমাত্র অ্যাডমিন)
+      summary: Create new user (admin only)
       security:
         - BearerAuth: []
       requestBody:
@@ -584,7 +584,7 @@ paths:
               $ref: "#/components/schemas/UserInput"
       responses:
         "201":
-          description: ইউজার সফলভাবে তৈরি হয়েছে
+          description: User created successfully
           content:
             application/json:
               schema:
@@ -594,7 +594,7 @@ paths:
     get:
       tags:
         - Users
-      summary: নির্দিষ্ট ইউজার ডেটেল দেখুন (সেলফ বা অ্যাডমিন)
+      summary: View specific user details (self or admin)
       security:
         - BearerAuth: []
       parameters:
@@ -605,7 +605,7 @@ paths:
             type: string
       responses:
         "200":
-          description: ইউজার ডেটেল রিটার্ন হয়েছে
+          description: User details returned
           content:
             application/json:
               schema:
@@ -613,7 +613,7 @@ paths:
     put:
       tags:
         - Users
-      summary: ইউজার তথ্য আপডেট (সেলফ বা অ্যাডমিন)
+      summary: Update user information (self or admin)
       security:
         - BearerAuth: []
       parameters:
@@ -630,7 +630,7 @@ paths:
               $ref: "#/components/schemas/UserInput"
       responses:
         "200":
-          description: ইউজার সফলভাবে আপডেট হয়েছে
+          description: User updated successfully
           content:
             application/json:
               schema:
@@ -638,7 +638,7 @@ paths:
     delete:
       tags:
         - Users
-      summary: ইউজার ডিলিট (শুধুমাত্র অ্যাডমিন)
+      summary: Delete user (admin only)
       security:
         - BearerAuth: []
       parameters:
@@ -649,7 +649,7 @@ paths:
             type: string
       responses:
         "200":
-          description: ইউজার সফলভাবে ডিলিট হয়েছে
+          description: User deleted successfully
           content:
             application/json:
               schema:
@@ -660,12 +660,12 @@ paths:
     get:
       tags:
         - Rooms
-      summary: সকল রুমের তালিকা দেখুন
+      summary: View list of all rooms
       security:
         - BearerAuth: []
       responses:
         "200":
-          description: রুম তালিকা সফলভাবে রিটার্ন হয়েছে
+          description: Room list returned successfully
           content:
             application/json:
               schema:
@@ -675,7 +675,7 @@ paths:
     post:
       tags:
         - Rooms
-      summary: নতুন রুম যোগ করুন (শুধুমাত্র অ্যাডমিন)
+      summary: Add new room (admin only)
       security:
         - BearerAuth: []
       requestBody:
@@ -686,7 +686,7 @@ paths:
               $ref: "#/components/schemas/RoomInput"
       responses:
         "201":
-          description: রুম সফলভাবে যোগ করা হয়েছে
+          description: Room added successfully
           content:
             application/json:
               schema:
@@ -696,7 +696,7 @@ paths:
     get:
       tags:
         - Rooms
-      summary: নির্দিষ্ট রুমের ডিটেইলস দেখুন
+      summary: View details of a specific room
       security:
         - BearerAuth: []
       parameters:
@@ -707,7 +707,7 @@ paths:
             type: string
       responses:
         "200":
-          description: রুমের তথ্য সফলভাবে রিটার্ন হয়েছে
+          description: Room details returned successfully
           content:
             application/json:
               schema:
@@ -715,7 +715,7 @@ paths:
     put:
       tags:
         - Rooms
-      summary: রুম আপডেট করুন (শুধুমাত্র অ্যাডমিন)
+      summary: Update room (admin only)
       security:
         - BearerAuth: []
       parameters:
@@ -732,7 +732,7 @@ paths:
               $ref: "#/components/schemas/RoomInput"
       responses:
         "200":
-          description: রুম সফলভাবে আপডেট হয়েছে
+          description: Room updated successfully
           content:
             application/json:
               schema:
@@ -740,7 +740,7 @@ paths:
     delete:
       tags:
         - Rooms
-      summary: রুম ডিলিট করুন (শুধুমাত্র অ্যাডমিন)
+      summary: Delete room (admin only)
       security:
         - BearerAuth: []
       parameters:
@@ -751,7 +751,7 @@ paths:
             type: string
       responses:
         "200":
-          description: রুম সফলভাবে ডিলিট হয়েছে
+          description: Room deleted successfully
           content:
             application/json:
               schema:
@@ -762,12 +762,12 @@ paths:
     get:
       tags:
         - Bookings
-      summary: সকল বুকিং তালিকা দেখুন (শুধুমাত্র অ্যাডমিন/রিসেপশনিস্ট)
+      summary: View list of all bookings (admin/receptionist only)
       security:
         - BearerAuth: []
       responses:
         "200":
-          description: বুকিং তালিকা সফলভাবে রিটার্ন হয়েছে
+          description: Booking list returned successfully
           content:
             application/json:
               schema:
@@ -777,7 +777,7 @@ paths:
     post:
       tags:
         - Bookings
-      summary: নতুন বুকিং তৈরি করুন (কাস্টমার/রিসেপশনিস্ট)
+      summary: Create new booking (customer/receptionist)
       security:
         - BearerAuth: []
       requestBody:
@@ -788,7 +788,7 @@ paths:
               $ref: "#/components/schemas/BookingInput"
       responses:
         "201":
-          description: বুকিং সফলভাবে তৈরি হয়েছে
+          description: Booking created successfully
           content:
             application/json:
               schema:
@@ -798,12 +798,12 @@ paths:
     get:
       tags:
         - Bookings
-      summary: নিজের বুকিং তালিকা দেখুন (কাস্টমার)
+      summary: View own booking list (customer)
       security:
         - BearerAuth: []
       responses:
         "200":
-          description: নিজের বুকিং তালিকা রিটার্ন হয়েছে
+          description: Own booking list returned
           content:
             application/json:
               schema:
@@ -815,7 +815,7 @@ paths:
     get:
       tags:
         - Bookings
-      summary: নির্দিষ্ট বুকিং বিস্তারিত দেখুন
+      summary: View specific booking details
       security:
         - BearerAuth: []
       parameters:
@@ -826,7 +826,7 @@ paths:
             type: string
       responses:
         "200":
-          description: বুকিং ডিটেইলস রিটার্ন হয়েছে
+          description: Booking details returned
           content:
             application/json:
               schema:
@@ -834,7 +834,7 @@ paths:
     delete:
       tags:
         - Bookings
-      summary: বুকিং বাতিল করুন (অ্যাডমিন/কাস্টমার)
+      summary: Cancel booking (admin/customer)
       security:
         - BearerAuth: []
       parameters:
@@ -845,7 +845,7 @@ paths:
             type: string
       responses:
         "200":
-          description: বুকিং সফলভাবে বাতিল হয়েছে
+          description: Booking cancelled successfully
           content:
             application/json:
               schema:
@@ -855,7 +855,7 @@ paths:
     put:
       tags:
         - Bookings
-      summary: চেক-ইন (অ্যাডমিন/রিসেপশনিস্ট)
+      summary: Check-in (admin/receptionist)
       security:
         - BearerAuth: []
       parameters:
@@ -866,7 +866,7 @@ paths:
             type: string
       responses:
         "200":
-          description: চেক-ইন সফল হয়েছে
+          description: Check-in successful
           content:
             application/json:
               schema:
@@ -876,7 +876,7 @@ paths:
     put:
       tags:
         - Bookings
-      summary: চেক-আউট (অ্যাডমিন/রিসেপশনিস্ট)
+      summary: Check-out (admin/receptionist)
       security:
         - BearerAuth: []
       parameters:
@@ -887,7 +887,7 @@ paths:
             type: string
       responses:
         "200":
-          description: চেক-আউট সফল হয়েছে
+          description: Check-out successful
           content:
             application/json:
               schema:
@@ -898,7 +898,7 @@ paths:
     post:
       tags:
         - Payments
-      summary: একটি বুকিংয়ের জন্য পেমেন্ট করুন (কাস্টমার)
+      summary: Make payment for a booking (customer)
       security:
         - BearerAuth: []
       requestBody:
@@ -909,7 +909,7 @@ paths:
               $ref: "#/components/schemas/PaymentInput"
       responses:
         "201":
-          description: পেমেন্ট সফলভাবে সম্পন্ন হয়েছে
+          description: Payment completed successfully
           content:
             application/json:
               schema:
@@ -919,12 +919,12 @@ paths:
     get:
       tags:
         - Payments
-      summary: নিজের পেমেন্ট হিস্টোরি দেখুন (কাস্টমার)
+      summary: View own payment history (customer)
       security:
         - BearerAuth: []
       responses:
         "200":
-          description: নিজের পেমেন্ট ডেটা রিটার্ন হয়েছে
+          description: Own payment data returned
           content:
             application/json:
               schema:
@@ -936,7 +936,7 @@ paths:
     get:
       tags:
         - Payments
-      summary: নির্দিষ্ট পেমেন্ট ডিটেইলস দেখুন (অ্যাডমিন/ওনার)
+      summary: View specific payment details (admin/owner)
       security:
         - BearerAuth: []
       parameters:
@@ -947,7 +947,7 @@ paths:
             type: string
       responses:
         "200":
-          description: পেমেন্ট তথ্য রিটার্ন হয়েছে
+          description: Payment information returned
           content:
             application/json:
               schema:
@@ -957,7 +957,7 @@ paths:
     get:
       tags:
         - Payments
-      summary: একটি নির্দিষ্ট বুকিং এর পেমেন্ট দেখুন (অ্যাডমিন)
+      summary: View payment of a specific booking (admin)
       security:
         - BearerAuth: []
       parameters:
@@ -968,7 +968,7 @@ paths:
             type: string
       responses:
         "200":
-          description: বুকিং পেমেন্ট তথ্য রিটার্ন হয়েছে
+          description: Booking payment information returned
           content:
             application/json:
               schema:
@@ -979,12 +979,12 @@ paths:
     get:
       tags:
         - Staff
-      summary: স্টাফ এর অ্যাসাইনকৃত সকল টাস্ক দেখুন
+      summary: View all tasks assigned to staff
       security:
         - BearerAuth: []
       responses:
         "200":
-          description: টাস্ক তালিকা সফলভাবে রিটার্ন হয়েছে
+          description: Task list returned successfully
           content:
             application/json:
               schema:
@@ -994,7 +994,7 @@ paths:
     post:
       tags:
         - Staff
-      summary: নতুন ক্লিনিং টাস্ক তৈরি (শুধুমাত্র অ্যাডমিন)
+      summary: Create new cleaning task (admin only)
       security:
         - BearerAuth: []
       requestBody:
@@ -1005,7 +1005,7 @@ paths:
               $ref: "#/components/schemas/TaskInput"
       responses:
         "201":
-          description: টাস্ক সফলভাবে তৈরি হয়েছে
+          description: Task created successfully
           content:
             application/json:
               schema:
@@ -1015,7 +1015,7 @@ paths:
     put:
       tags:
         - Staff
-      summary: ক্লিনিং টাস্ক এর স্ট্যাটাস আপডেট করুন (স্টাফ)
+      summary: Update cleaning task status (staff)
       security:
         - BearerAuth: []
       parameters:
@@ -1040,7 +1040,7 @@ paths:
                   type: string
       responses:
         "200":
-          description: টাস্ক স্ট্যাটাস সফলভাবে আপডেট হয়েছে
+          description: Task status updated successfully
           content:
             application/json:
               schema:
@@ -1051,12 +1051,12 @@ paths:
     get:
       tags:
         - Reports
-      summary: ড্যাশবোর্ড সংক্ষিপ্ত রিপোর্ট (শুধুমাত্র অ্যাডমিন)
+      summary: Dashboard summary report (admin only)
       security:
         - BearerAuth: []
       responses:
         "200":
-          description: ওভারভিউ রিপোর্ট রিটার্ন হয়েছে
+          description: Overview report returned
           content:
             application/json:
               schema:
@@ -1075,7 +1075,7 @@ paths:
     get:
       tags:
         - Reports
-      summary: বুকিং সারাংশ রিপোর্ট (শুধুমাত্র অ্যাডমিন)
+      summary: Booking Summary Report (Admin Only)
       security:
         - BearerAuth: []
       parameters:
@@ -1093,7 +1093,7 @@ paths:
             format: date
       responses:
         "200":
-          description: বুকিং রিপোর্ট রিটার্ন হয়েছে
+          description: Booking report has been returned
           content:
             application/json:
               schema:
@@ -1110,7 +1110,7 @@ paths:
     get:
       tags:
         - Reports
-      summary: রাজস্ব রিপোর্ট (শুধুমাত্র অ্যাডমিন)
+      summary: Revenue Report (Admin Only)
       security:
         - BearerAuth: []
       parameters:
@@ -1128,7 +1128,7 @@ paths:
             format: date
       responses:
         "200":
-          description: রাজস্ব রিপোর্ট রিটার্ন হয়েছে
+          description: Revenue report has been returned
           content:
             application/json:
               schema:
@@ -1146,12 +1146,12 @@ paths:
     get:
       tags:
         - Notifications
-      summary: ইউজারের সকল নোটিফিকেশন দেখুন
+      summary: View all notifications of the user
       security:
         - BearerAuth: []
       responses:
         "200":
-          description: নোটিফিকেশন তালিকা সফলভাবে রিটার্ন হয়েছে
+          description: Notification list has been successfully returned
           content:
             application/json:
               schema:
@@ -1163,7 +1163,7 @@ paths:
     put:
       tags:
         - Notifications
-      summary: নির্দিষ্ট নোটিফিকেশন পড়া হিসেবে মার্ক করুন
+      summary: Mark specific notification as read
       security:
         - BearerAuth: []
       parameters:
@@ -1174,7 +1174,7 @@ paths:
             type: string
       responses:
         "200":
-          description: নোটিফিকেশন সফলভাবে আপডেট হয়েছে
+          description: Notification has been successfully updated
           content:
             application/json:
               schema:
@@ -1185,12 +1185,12 @@ paths:
     get:
       tags:
         - Settings
-      summary: হোটেলের সেটিংস তথ্য দেখুন (শুধুমাত্র অ্যাডমিন)
+      summary: View hotel settings information (Admin Only)
       security:
         - BearerAuth: []
       responses:
         "200":
-          description: সেটিংস সফলভাবে রিটার্ন হয়েছে
+          description: Settings have been successfully returned
           content:
             application/json:
               schema:
@@ -1198,7 +1198,7 @@ paths:
     put:
       tags:
         - Settings
-      summary: হোটেল সেটিংস আপডেট করুন (শুধুমাত্র অ্যাডমিন)
+      summary: Update hotel settings (Admin Only)
       security:
         - BearerAuth: []
       requestBody:
@@ -1209,7 +1209,7 @@ paths:
               $ref: "#/components/schemas/SettingsInput"
       responses:
         "200":
-          description: সেটিংস সফলভাবে আপডেট হয়েছে
+          description: Settings have been successfully updated
           content:
             application/json:
               schema:
@@ -1220,7 +1220,7 @@ paths:
     get:
       tags:
         - Logs
-      summary: অ্যাডমিন এর জন্য সিস্টেম লগ ও অ্যাক্টিভিটি হিস্টোরি দেখুন
+      summary: View system logs and activity history for Admin
       security:
         - BearerAuth: []
       parameters:
@@ -1229,16 +1229,16 @@ paths:
           required: false
           schema:
             type: string
-          description: নির্দিষ্ট অ্যাকশন ফিল্টার (যেমন create_booking, login ইত্যাদি)
+          description: Specific action filter (e.g., create_booking, login, etc.)
         - in: query
           name: userId
           required: false
           schema:
             type: string
-          description: নির্দিষ্ট ইউজারের অ্যাক্টিভিটি ফিল্টার করুন
+          description: Filter activity of a specific user
       responses:
         "200":
-          description: লগ ডেটা সফলভাবে রিটার্ন হয়েছে
+          description: Log data has been successfully returned
           content:
             application/json:
               schema:
