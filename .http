@@ -1,0 +1,138 @@
+### Register a new user
+POST http://localhost:4000/api/register
+Content-Type: application/json
+
+{
+  "name": "Test User32466",
+  "email": "test6666@example.com",
+  "password": "Test@1234"
+}
+
+### Login user
+POST http://localhost:4000/api/login
+Content-Type: application/json
+
+{
+  "email": "test0@example.com",
+  "password": "NewPassword@123"
+}
+
+### Get current user profile (Protected)
+GET http://localhost:4000/api/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmU5NjM5NDAwN2MxOWM4NzkwNTRjNyIsIm5hbWUiOiJUZXN0IFVzZXIzMjQ2NiIsImVtYWlsIjoidGVzdDY2NjZAZXhhbXBsZS5jb20iLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3NTIwNzc5MDUsImV4cCI6MTc1MjA4MTUwNX0.f5EWUKHgr5pgF5v8qR4vUHmDJFvd4dghPsU25bz8hfU
+
+
+### Update profile (example: change name)
+### Update profile (PATCH request)
+PATCH http://localhost:4000/api/profile
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmU5NjM5NDAwN2MxOWM4NzkwNTRjNyIsIm5hbWUiOiJOZXcgIHRleHQiLCJlbWFpbCI6InRlc3QwQGV4YW1wbGUuY29tIiwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNzUyMTM4NDU2LCJleHAiOjE3NTIxNDIwNTZ9.Y8UeZWVFpegpTPk8SuZGtRSgx_JrxnCyMhVMtisaxlY
+
+{
+  "name": "New Updated Name",
+  "phone": "+8801712345678",
+  "address": "Dhaka, Bangladesh",
+  "dateOfBirth": "2000-01-01",
+  "gender": "male",
+  "profilePic": "https://example.com/image.png"
+}
+
+
+### Change user password (if you implement change password route)
+PATCH http://localhost:4000/api/profile/password
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmU5NjM5NDAwN2MxOWM4NzkwNTRjNyIsIm5hbWUiOiJOZXcgIHRleHQiLCJlbWFpbCI6InRlc3QwQGV4YW1wbGUuY29tIiwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNzUyMTM4NDU2LCJleHAiOjE3NTIxNDIwNTZ9.Y8UeZWVFpegpTPk8SuZGtRSgx_JrxnCyMhVMtisaxlY
+
+{
+  "currentPassword": "Test@1234",
+  "newPassword": "NewPassword@123"
+}
+
+### Get all users (default page & limit)
+GET http://localhost:4000/api/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmU5NjM5NDAwN2MxOWM4NzkwNTRjNyIsIm5hbWUiOiJOZXcgVXBkYXRlZCBOYW1lIiwiZW1haWwiOiJ0ZXN0MEBleGFtcGxlLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1MjE2NjUwMSwiZXhwIjoxNzUyNzcxMzAxfQ.yC9FvbIY1OAA-cQEg21M2WzOkbtjeOLKk78VMeDCdcs
+
+
+### Create a new room
+POST http://localhost:4000/api/room
+Content-Type: application/json
+
+{
+  "number": "108",
+  "type": "double",
+  "pricePerNight": 1299.99,
+  "capacity": 1,
+  "amenities": ["laptop", "fregde"],
+  "description": "Cozy single room with a city view",
+  "status": "available",
+  "images": ["https://example.com/room1.jpg"]
+}
+
+### Get all rooms
+GET http://localhost:4000/api/room
+Content-Type: application/json
+
+
+### Get single room
+GET http://localhost:4000/api/room/6874674c38250a03bd5db407
+Content-Type: application/json
+
+### update room
+PUT  http://localhost:4000/api/room/6874673738250a03bd5db405
+Content-Type: application/json
+
+{
+  "number": "103",
+  "type": "double",
+  "pricePerNight": 199.99
+ 
+}
+
+### delete room
+DELETE http://localhost:4000/api/room/6874674c38250a03bd5db407
+Content-Type: application/json
+
+### update status room
+PATCH  http://localhost:4000/api/room/6874673738250a03bd5db405/status
+Content-Type: application/json
+
+{
+  "status": "booked"
+}
+### get available room
+GET  http://localhost:4000/api/room/available
+Content-Type: application/json
+
+
+//=====================================
+
+### 📌 Create a new booking
+POST http://localhost:4000/api/booking
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmU5NjM5NDAwN2MxOWM4NzkwNTRjNyIsIm5hbWUiOiJOZXcgVXBkYXRlZCBOYW1lIiwiZW1haWwiOiJ0ZXN0MEBleGFtcGxlLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1MjQ2NDk3NSwiZXhwIjoxNzUzMDY5Nzc1fQ.KY8BpH4_dixYyRWMXwkV2q44xH28gmCVsgviQnwI-OU
+
+{
+  "room": "6874673738250a03bd5db405",
+  "checkInDate": "2025-07-15",
+  "totalPrice": 500,
+  "guests": 1,
+  "specialRequests": "Late check-in"
+}
+
+
+
+### 📌 Get all bookings (with optional filters, pagination, etc.)
+GET http://localhost:4000/api/booking
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmU5NjM5NDAwN2MxOWM4NzkwNTRjNyIsIm5hbWUiOiJOZXcgVXBkYXRlZCBOYW1lIiwiZW1haWwiOiJ0ZXN0MEBleGFtcGxlLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1MjQ2NDk3NSwiZXhwIjoxNzUzMDY5Nzc1fQ.KY8BpH4_dixYyRWMXwkV2q44xH28gmCVsgviQnwI-OU
+
+
+
+### 📌 Get single booking by ID
+GET http://localhost:4000/api/booking/689aa88ec18432beac24e1f3
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmU5NjM5NDAwN2MxOWM4NzkwNTRjNyIsIm5hbWUiOiJOZXcgVXBkYXRlZCBOYW1lIiwiZW1haWwiOiJ0ZXN0MEBleGFtcGxlLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1MjQ2NDk3NSwiZXhwIjoxNzUzMDY5Nzc1fQ.KY8BpH4_dixYyRWMXwkV2q44xH28gmCVsgviQnwI-OU
+
+
+### 📌 Update a booking (partial update)
+PATCH http://localhost:400

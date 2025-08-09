@@ -1,0 +1,1247 @@
+openapi: 3.0.0
+info:
+  title: Hotel Management System API
+  version: 1.0.0
+  description: >
+    একটি সম্পূর্ণ RESTful API হোটেল ম্যানেজমেন্ট সিস্টেমের জন্য,
+    যেখানে রুম বুকিং, ইউজার ম্যানেজমেন্ট, পেমেন্ট, স্টাফ টাস্ক, রিপোর্ট ও নোটিফিকেশন অন্তর্ভুক্ত।
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Local development server
+
+tags:
+  - name: Auth
+    description: ইউজার রেজিস্ট্রেশন, লগইন, লগআউট এবং পাসওয়ার্ড রিসেট সম্পর্কিত এন্ডপয়েন্টসমূহ
+  - name: Users
+    description: ইউজার ম্যানেজমেন্ট এন্ডপয়েন্টসমূহ
+  - name: Rooms
+    description: রুম ম্যানেজমেন্ট এন্ডপয়েন্টসমূহ
+  - name: Bookings
+    description: বুকিং ম্যানেজমেন্ট এন্ডপয়েন্টসমূহ
+  - name: Payments
+    description: পেমেন্ট ম্যানেজমেন্ট এন্ডপয়েন্টসমূহ
+  - name: Staff
+    description: স্টাফ টাস্ক ম্যানেজমেন্ট এন্ডপয়েন্টসমূহ
+  - name: Reports
+    description: রিপোর্ট জেনারেশন এন্ডপয়েন্টসমূহ
+  - name: Notifications
+    description: নোটিফিকেশন ম্যানেজমেন্ট এন্ডপয়েন্টসমূহ
+  - name: Settings
+    description: সিস্টেম সেটিংস ম্যানেজমেন্ট এন্ডপয়েন্টসমূহ
+  - name: Logs
+    description: সিস্টেম লগ ম্যানেজমেন্ট এন্ডপয়েন্টসমূহ
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    # Auth Schemas
+    RegisterRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          example: "Rahim Uddin"
+        email:
+          type: string
+          format: email
+          example: "rahim@example.com"
+        password:
+          type: string
+          format: password
+          example: "StrongPassword123"
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "rahim@example.com"
+        password:
+          type: string
+          format: password
+          example: "StrongPassword123"
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        refreshToken:
+          type: string
+          example: "d1f3e8f5-3ac1-4a53-bb4b-3f3a7c123abc"
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Operation successful"
+    
+    # Users Schemas
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        role:
+          type: string
+          enum: [admin, receptionist, customer, staff]
+        status:
+          type: string
+          enum: [active, banned]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    UserInput:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        role:
+          type: string
+          enum: [admin, receptionist, customer, staff]
+        status:
+          type: string
+          enum: [active, banned]
+    
+    # Rooms Schemas
+    Room:
+      type: object
+      properties:
+        _id:
+          type: string
+        roomNumber:
+          type: string
+        roomType:
+          type: string
+          enum: [single, double, suite]
+        price:
+          type: number
+        status:
+          type: string
+          enum: [available, occupied, cleaning]
+        description:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+            format: uri
+        createdAt:
+          type: string
+          format: date-time
+    RoomInput:
+      type: object
+      required:
+        - roomNumber
+        - roomType
+        - price
+        - status
+      properties:
+        roomNumber:
+          type: string
+        roomType:
+          type: string
+          enum: [single, double, suite]
+        price:
+          type: number
+        status:
+          type: string
+          enum: [available, occupied, cleaning]
+        description:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+            format: uri
+    
+    # Bookings Schemas
+    Booking:
+      type: object
+      properties:
+        _id:
+          type: string
+        customerId:
+          type: string
+        roomId:
+          type: string
+        checkInDate:
+          type: string
+          format: date
+        checkOutDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [booked, checked-in, checked-out, cancelled]
+        totalAmount:
+          type: number
+        paymentStatus:
+          type: string
+          enum: [unpaid, paid, refunded]
+        createdBy:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    BookingInput:
+      type: object
+      required:
+        - roomId
+        - checkInDate
+        - checkOutDate
+      properties:
+        roomId:
+          type: string
+        checkInDate:
+          type: string
+          format: date
+        checkOutDate:
+          type: string
+          format: date
+    
+    # Payments Schemas
+    Payment:
+      type: object
+      properties:
+        _id:
+          type: string
+        bookingId:
+          type: string
+        amount:
+          type: number
+        method:
+          type: string
+          enum: [cash, card, sslcommerz, stripe]
+        status:
+          type: string
+          enum: [pending, completed, failed]
+        transactionId:
+          type: string
+        paidAt:
+          type: string
+          format: date-time
+    PaymentInput:
+      type: object
+      required:
+        - bookingId
+        - amount
+        - method
+      properties:
+        bookingId:
+          type: string
+        amount:
+          type: number
+        method:
+          type: string
+          enum: [cash, card, sslcommerz, stripe]
+    
+    # Staff Schemas
+    Task:
+      type: object
+      properties:
+        _id:
+          type: string
+        roomId:
+          type: string
+        assignedTo:
+          type: string
+        status:
+          type: string
+          enum: [pending, in-progress, done]
+        note:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+    TaskInput:
+      type: object
+      required:
+        - roomId
+        - assignedTo
+        - status
+      properties:
+        roomId:
+          type: string
+        assignedTo:
+          type: string
+        status:
+          type: string
+          enum: [pending, in-progress, done]
+        note:
+          type: string
+    
+    # Notifications Schemas
+    Notification:
+      type: object
+      properties:
+        _id:
+          type: string
+        userId:
+          type: string
+        title:
+          type: string
+        message:
+          type: string
+        read:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+    
+    # Settings Schemas
+    Settings:
+      type: object
+      properties:
+        hotelName:
+          type: string
+        currency:
+          type: string
+        taxPercentage:
+          type: number
+        discountPolicy:
+          type: string
+        cancellationPolicy:
+          type: string
+        checkInTime:
+          type: string
+        checkOutTime:
+          type: string
+        emailTemplates:
+          type: object
+          properties:
+            bookingConfirmation:
+              type: string
+            preCheckinReminder:
+              type: string
+    SettingsInput:
+      type: object
+      required:
+        - hotelName
+        - currency
+      properties:
+        hotelName:
+          type: string
+        currency:
+          type: string
+        taxPercentage:
+          type: number
+        discountPolicy:
+          type: string
+        cancellationPolicy:
+          type: string
+        checkInTime:
+          type: string
+        checkOutTime:
+          type: string
+        emailTemplates:
+          type: object
+          properties:
+            bookingConfirmation:
+              type: string
+            preCheckinReminder:
+              type: string
+    
+    # Logs Schemas
+    Log:
+      type: object
+      properties:
+        _id:
+          type: string
+        action:
+          type: string
+          example: create_booking
+        performedBy:
+          type: string
+        meta:
+          type: object
+          additionalProperties: true
+        timestamp:
+          type: string
+          format: date-time
+
+security:
+  - BearerAuth: []
+
+paths:
+  # Auth Endpoints
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: নতুন কাস্টমার রেজিস্ট্রেশন
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: রেজিস্ট্রেশন সফল হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "400":
+          description: ভুল ইনপুট বা ইউজার ইতিমধ্যেই আছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: ইউজার লগইন (সব রোলের জন্য)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: লগইন সফল, টোকেন প্রদান
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: অবৈধ ইউজারনেম বা পাসওয়ার্ড
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /auth/logout:
+    post:
+      tags:
+        - Auth
+      summary: ইউজার লগআউট
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: সফলভাবে লগআউট হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /auth/refresh-token:
+    post:
+      tags:
+        - Auth
+      summary: নতুন access token তৈরি করা
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+                  example: "d1f3e8f5-3ac1-4a53-bb4b-3f3a7c123abc"
+      responses:
+        "200":
+          description: নতুন access token প্রদান
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: অবৈধ বা মেয়াদোত্তীর্ণ রিফ্রেশ টোকেন
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /auth/forgot-password:
+    post:
+      tags:
+        - Auth
+      summary: পাসওয়ার্ড রিসেট করার জন্য OTP বা লিঙ্ক পাঠানো
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "rahim@example.com"
+      responses:
+        "200":
+          description: রিসেট লিঙ্ক বা OTP পাঠানো হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "404":
+          description: ইমেইল পাওয়া যায়নি
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /auth/reset-password:
+    post:
+      tags:
+        - Auth
+      summary: পাসওয়ার্ড রিসেট করা
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - newPassword
+              properties:
+                token:
+                  type: string
+                  example: "reset-token-123"
+                newPassword:
+                  type: string
+                  format: password
+                  example: "NewStrongPassword123"
+      responses:
+        "200":
+          description: পাসওয়ার্ড সফলভাবে রিসেট হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "400":
+          description: অবৈধ বা মেয়াদোত্তীর্ণ টোকেন
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  # Users Endpoints
+  /users:
+    get:
+      tags:
+        - Users
+      summary: সকল ইউজারের তালিকা দেখুন (শুধুমাত্র অ্যাডমিন)
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: ইউজার তালিকা সফলভাবে রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+    post:
+      tags:
+        - Users
+      summary: নতুন ইউজার তৈরি (শুধুমাত্র অ্যাডমিন)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "201":
+          description: ইউজার সফলভাবে তৈরি হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: নির্দিষ্ট ইউজার ডেটেল দেখুন (সেলফ বা অ্যাডমিন)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ইউজার ডেটেল রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    put:
+      tags:
+        - Users
+      summary: ইউজার তথ্য আপডেট (সেলফ বা অ্যাডমিন)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "200":
+          description: ইউজার সফলভাবে আপডেট হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    delete:
+      tags:
+        - Users
+      summary: ইউজার ডিলিট (শুধুমাত্র অ্যাডমিন)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ইউজার সফলভাবে ডিলিট হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  # Rooms Endpoints
+  /rooms:
+    get:
+      tags:
+        - Rooms
+      summary: সকল রুমের তালিকা দেখুন
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: রুম তালিকা সফলভাবে রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Room"
+    post:
+      tags:
+        - Rooms
+      summary: নতুন রুম যোগ করুন (শুধুমাত্র অ্যাডমিন)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoomInput"
+      responses:
+        "201":
+          description: রুম সফলভাবে যোগ করা হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+
+  /rooms/{id}:
+    get:
+      tags:
+        - Rooms
+      summary: নির্দিষ্ট রুমের ডিটেইলস দেখুন
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: রুমের তথ্য সফলভাবে রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+    put:
+      tags:
+        - Rooms
+      summary: রুম আপডেট করুন (শুধুমাত্র অ্যাডমিন)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoomInput"
+      responses:
+        "200":
+          description: রুম সফলভাবে আপডেট হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+    delete:
+      tags:
+        - Rooms
+      summary: রুম ডিলিট করুন (শুধুমাত্র অ্যাডমিন)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: রুম সফলভাবে ডিলিট হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  # Bookings Endpoints
+  /bookings:
+    get:
+      tags:
+        - Bookings
+      summary: সকল বুকিং তালিকা দেখুন (শুধুমাত্র অ্যাডমিন/রিসেপশনিস্ট)
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: বুকিং তালিকা সফলভাবে রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Booking"
+    post:
+      tags:
+        - Bookings
+      summary: নতুন বুকিং তৈরি করুন (কাস্টমার/রিসেপশনিস্ট)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookingInput"
+      responses:
+        "201":
+          description: বুকিং সফলভাবে তৈরি হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+
+  /bookings/my:
+    get:
+      tags:
+        - Bookings
+      summary: নিজের বুকিং তালিকা দেখুন (কাস্টমার)
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: নিজের বুকিং তালিকা রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Booking"
+
+  /bookings/{id}:
+    get:
+      tags:
+        - Bookings
+      summary: নির্দিষ্ট বুকিং বিস্তারিত দেখুন
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: বুকিং ডিটেইলস রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+    delete:
+      tags:
+        - Bookings
+      summary: বুকিং বাতিল করুন (অ্যাডমিন/কাস্টমার)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: বুকিং সফলভাবে বাতিল হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /bookings/{id}/checkin:
+    put:
+      tags:
+        - Bookings
+      summary: চেক-ইন (অ্যাডমিন/রিসেপশনিস্ট)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: চেক-ইন সফল হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /bookings/{id}/checkout:
+    put:
+      tags:
+        - Bookings
+      summary: চেক-আউট (অ্যাডমিন/রিসেপশনিস্ট)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: চেক-আউট সফল হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  # Payments Endpoints
+  /payments:
+    post:
+      tags:
+        - Payments
+      summary: একটি বুকিংয়ের জন্য পেমেন্ট করুন (কাস্টমার)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentInput"
+      responses:
+        "201":
+          description: পেমেন্ট সফলভাবে সম্পন্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+
+  /payments/my:
+    get:
+      tags:
+        - Payments
+      summary: নিজের পেমেন্ট হিস্টোরি দেখুন (কাস্টমার)
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: নিজের পেমেন্ট ডেটা রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Payment"
+
+  /payments/{id}:
+    get:
+      tags:
+        - Payments
+      summary: নির্দিষ্ট পেমেন্ট ডিটেইলস দেখুন (অ্যাডমিন/ওনার)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: পেমেন্ট তথ্য রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+
+  /payments/booking/{bookingId}:
+    get:
+      tags:
+        - Payments
+      summary: একটি নির্দিষ্ট বুকিং এর পেমেন্ট দেখুন (অ্যাডমিন)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: bookingId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: বুকিং পেমেন্ট তথ্য রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+
+  # Staff Endpoints
+  /tasks:
+    get:
+      tags:
+        - Staff
+      summary: স্টাফ এর অ্যাসাইনকৃত সকল টাস্ক দেখুন
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: টাস্ক তালিকা সফলভাবে রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+    post:
+      tags:
+        - Staff
+      summary: নতুন ক্লিনিং টাস্ক তৈরি (শুধুমাত্র অ্যাডমিন)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskInput"
+      responses:
+        "201":
+          description: টাস্ক সফলভাবে তৈরি হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+
+  /tasks/{id}:
+    put:
+      tags:
+        - Staff
+      summary: ক্লিনিং টাস্ক এর স্ট্যাটাস আপডেট করুন (স্টাফ)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  enum: [pending, in-progress, done]
+                note:
+                  type: string
+      responses:
+        "200":
+          description: টাস্ক স্ট্যাটাস সফলভাবে আপডেট হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+
+  # Reports Endpoints
+  /dashboard/overview:
+    get:
+      tags:
+        - Reports
+      summary: ড্যাশবোর্ড সংক্ষিপ্ত রিপোর্ট (শুধুমাত্র অ্যাডমিন)
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: ওভারভিউ রিপোর্ট রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalBookingsToday:
+                    type: integer
+                  totalRevenueToday:
+                    type: number
+                  availableRooms:
+                    type: integer
+                  occupiedRooms:
+                    type: integer
+
+  /reports/bookings:
+    get:
+      tags:
+        - Reports
+      summary: বুকিং সারাংশ রিপোর্ট (শুধুমাত্র অ্যাডমিন)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: startDate
+          required: false
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: endDate
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: বুকিং রিপোর্ট রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                    totalBookings:
+                      type: integer
+
+  /reports/revenue:
+    get:
+      tags:
+        - Reports
+      summary: রাজস্ব রিপোর্ট (শুধুমাত্র অ্যাডমিন)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: startDate
+          required: false
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: endDate
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: রাজস্ব রিপোর্ট রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                    totalRevenue:
+                      type: number
+
+  # Notifications Endpoints
+  /notifications:
+    get:
+      tags:
+        - Notifications
+      summary: ইউজারের সকল নোটিফিকেশন দেখুন
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: নোটিফিকেশন তালিকা সফলভাবে রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+
+  /notifications/{id}/read:
+    put:
+      tags:
+        - Notifications
+      summary: নির্দিষ্ট নোটিফিকেশন পড়া হিসেবে মার্ক করুন
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: নোটিফিকেশন সফলভাবে আপডেট হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notification"
+
+  # Settings Endpoints
+  /settings:
+    get:
+      tags:
+        - Settings
+      summary: হোটেলের সেটিংস তথ্য দেখুন (শুধুমাত্র অ্যাডমিন)
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: সেটিংস সফলভাবে রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Settings"
+    put:
+      tags:
+        - Settings
+      summary: হোটেল সেটিংস আপডেট করুন (শুধুমাত্র অ্যাডমিন)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SettingsInput"
+      responses:
+        "200":
+          description: সেটিংস সফলভাবে আপডেট হয়েছে
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Settings"
+
+  # Logs Endpoints
+  /logs:
+    get:
+      tags:
+        - Logs
+      summary: অ্যাডমিন এর জন্য সিস্টেম লগ ও অ্যাক্টিভিটি হিস্টোরি দেখুন
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: action
+          required: false
+          schema:
+            type: string
+          description: নির্দিষ্ট অ্যাকশন ফিল্টার (যেমন create_booking, login ইত্যাদি)
+        - in: query
+          name: userId
+          required: false
+          schema:
+            type: string
+          description: নির্দিষ্ট ইউজারের অ্যাক্টিভিটি ফিল্টার করুন
+      responses:
+        "200":
+          description: লগ ডেটা সফলভাবে রিটার্ন হয়েছে
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Log"
